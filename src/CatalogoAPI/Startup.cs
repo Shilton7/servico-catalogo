@@ -21,13 +21,19 @@ namespace CatalogoAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string mySqlConnectionString = Configuration.GetConnectionString("DefaultConnection");
+            string mySqlConnectionStr = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<AppDbContext>(options =>
-            options.UseMySql(mySqlConnectionString, ServerVersion.AutoDetect(mySqlConnectionString))
+            options.UseMySql(mySqlConnectionStr, ServerVersion.AutoDetect(mySqlConnectionStr))
             );
 
-            services.AddControllers();
+            services.AddControllers()
+                    .AddNewtonsoftJson(options =>
+                    {
+                        options.SerializerSettings.ReferenceLoopHandling
+                        = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                    });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CatalogoAPI", Version = "v1" });
