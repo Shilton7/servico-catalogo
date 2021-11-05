@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CatalogoAPI.Validations;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -12,6 +13,7 @@ namespace CatalogoAPI.Models
 
         [Required]
         [StringLength(80)]
+        [PrimeiraLetraMaiuscula]
         public string Nome { get; set; }
 
         [Required]
