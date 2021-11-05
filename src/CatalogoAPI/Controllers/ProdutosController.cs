@@ -25,7 +25,8 @@ namespace CatalogoAPI.Controllers
         {
             try
             {
-                return _context.Produtos.AsNoTracking().ToList();
+                var produtos = _context.Produtos.AsNoTracking().ToList();
+                return Ok(produtos);
             }
             catch (Exception)
             {
@@ -34,7 +35,7 @@ namespace CatalogoAPI.Controllers
             }
         }
 
-        [HttpGet("{id:int}", Name = "ObterProdutoPorId")]
+        [HttpGet("{id:int:min(1)}", Name = "ObterProdutoPorId")]
         public ActionResult<Produto> GetById(int id)
         {
             try
@@ -69,7 +70,7 @@ namespace CatalogoAPI.Controllers
             }
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{id:int:min(1)}")]
         public ActionResult Put(int id, [FromBody] Produto produtoRequest)
         {
             try
@@ -91,7 +92,7 @@ namespace CatalogoAPI.Controllers
             }
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id:int:min(1)}")]
         public ActionResult Delete(int id)
         {
             try

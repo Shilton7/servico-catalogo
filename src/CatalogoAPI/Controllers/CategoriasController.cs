@@ -25,7 +25,8 @@ namespace CatalogoAPI.Controllers
         {
             try
             {
-                return _context.Categorias.AsNoTracking().ToList();
+                var categorias = _context.Categorias.AsNoTracking().ToList();
+                return Ok(categorias);
             }
             catch (Exception)
             {
@@ -40,7 +41,8 @@ namespace CatalogoAPI.Controllers
         {
             try
             {
-                return _context.Categorias.Include(c => c.Produtos).ToList();
+                var categoria = _context.Categorias.Include(c => c.Produtos).ToList();
+                return Ok(categoria);
             }
             catch (Exception)
             {
@@ -51,7 +53,7 @@ namespace CatalogoAPI.Controllers
             
         }
 
-        [HttpGet("{id:int}", Name = "ObterCategoriaPorId")]
+        [HttpGet("{id:int:min(1)}", Name = "ObterCategoriaPorId")]
         public ActionResult<Categoria> GetById(int id)
         {
             var categoria =  _context.Categorias.AsNoTracking().FirstOrDefault(c => c.CategoriaId == id);
@@ -60,7 +62,7 @@ namespace CatalogoAPI.Controllers
             return Ok(categoria);
         }
 
-        [HttpGet("produtos/{id:int}", Name = "ObterCategoriaProdutoPorId")]
+        [HttpGet("produtos/{id:int:min(1)}", Name = "ObterCategoriaProdutoPorId")]
         public ActionResult<Categoria> GetCategoriaProdutoById(int id)
         {
             var categoria = _context.Categorias.Include(c => c.Produtos).FirstOrDefault(c => c.CategoriaId == id);
@@ -87,7 +89,7 @@ namespace CatalogoAPI.Controllers
             }
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{id:int:min(1)}")]
         public ActionResult Put(int id, [FromBody] Categoria categoriaRequest)
         {
             try
@@ -109,7 +111,7 @@ namespace CatalogoAPI.Controllers
             }
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id:int:min(1)}")]
         public ActionResult Delete(int id)
         {
             try
