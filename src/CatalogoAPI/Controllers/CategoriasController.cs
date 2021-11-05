@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CatalogoAPI.Controllers
 {
@@ -21,11 +22,11 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Categoria>> Get()
+        public async Task<ActionResult<IEnumerable<Categoria>>> GetAsync()
         {
             try
             {
-                var categorias = _context.Categorias.AsNoTracking().ToList();
+                var categorias = await _context.Categorias.AsNoTracking().ToListAsync();
                 return Ok(categorias);
             }
             catch (Exception)
@@ -37,11 +38,11 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpGet("produtos")]
-        public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
+        public async Task<ActionResult<IEnumerable<Categoria>>> GetCategoriasProdutosAsync()
         {
             try
             {
-                var categoria = _context.Categorias.Include(c => c.Produtos).ToList();
+                var categoria = await _context.Categorias.Include(c => c.Produtos).ToListAsync();
                 return Ok(categoria);
             }
             catch (Exception)
@@ -54,30 +55,30 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpGet("{id:int:min(1)}", Name = "ObterCategoriaPorId")]
-        public ActionResult<Categoria> GetById(int id)
+        public async Task<ActionResult<Categoria>> GetByIdAsync(int id)
         {
-            var categoria =  _context.Categorias.AsNoTracking().FirstOrDefault(c => c.CategoriaId == id);
+            var categoria =  await _context.Categorias.AsNoTracking().FirstOrDefaultAsync(c => c.CategoriaId == id);
             if (categoria == null) return NotFound("A categoria informada não foi encontrada.");
 
             return Ok(categoria);
         }
 
         [HttpGet("produtos/{id:int:min(1)}", Name = "ObterCategoriaProdutoPorId")]
-        public ActionResult<Categoria> GetCategoriaProdutoById(int id)
+        public async Task<ActionResult<Categoria>> GetCategoriaProdutoByIdAsync(int id)
         {
-            var categoria = _context.Categorias.Include(c => c.Produtos).FirstOrDefault(c => c.CategoriaId == id);
+            var categoria = await _context.Categorias.Include(c => c.Produtos).FirstOrDefaultAsync(c => c.CategoriaId == id);
             if (categoria == null) return NotFound("A categoria informada não foi encontrada.");
 
             return Ok(categoria);
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] Categoria categoriaRequest)
+        public async Task<ActionResult> PostAsync([FromBody] Categoria categoriaRequest)
         {
             try
             {
-                _context.Categorias.Add(categoriaRequest);
-                _context.SaveChanges();
+               await _context.Categorias.AddAsync(categoriaRequest);
+               await _context.SaveChangesAsync();
 
                 return new CreatedAtRouteResult("ObterCategoriaPorId", new { id = categoriaRequest.CategoriaId },
                     categoriaRequest);
@@ -90,17 +91,17 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpPut("{id:int:min(1)}")]
-        public ActionResult Put(int id, [FromBody] Categoria categoriaRequest)
+        public async Task<ActionResult> PutAsync(int id, [FromBody] Categoria categoriaRequest)
         {
             try
             {
                 if (id != categoriaRequest.CategoriaId) return BadRequest();
 
-                var categoria = _context.Categorias.AsNoTracking().FirstOrDefault(c => c.CategoriaId == id);
+                var categoria = await _context.Categorias.AsNoTracking().FirstOrDefaultAsync(c => c.CategoriaId == id);
                 if (categoria == null) return NotFound("A categoria informada não foi encontrada.");
 
                 _context.Entry(categoriaRequest).State = EntityState.Modified;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 return Ok($"Categoria com id ({id}) foi atualizada com sucesso!");
             }
@@ -112,15 +113,15 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpDelete("{id:int:min(1)}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
             try
             {
-                var categoria = _context.Categorias.FirstOrDefault(c => c.CategoriaId == id);
+                var categoria = await _context.Categorias.FirstOrDefaultAsync(c => c.CategoriaId == id);
                 if (categoria == null) return NotFound($"A categoria com id={id} não foi encontrada.");
 
                 _context.Categorias.Remove(categoria);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 return NoContent();
             }

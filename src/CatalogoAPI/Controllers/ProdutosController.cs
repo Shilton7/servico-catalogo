@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CatalogoAPI.Controllers
 {
@@ -21,11 +22,11 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Produto>> Get()
+        public async Task<ActionResult<IEnumerable<Produto>>> GetAsync()
         {
             try
             {
-                var produtos = _context.Produtos.AsNoTracking().ToList();
+                var produtos = await _context.Produtos.AsNoTracking().ToListAsync();
                 return Ok(produtos);
             }
             catch (Exception)
@@ -36,12 +37,12 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpGet("{id:int:min(1)}", Name = "ObterProdutoPorId")]
-        public ActionResult<Produto> GetById(int id)
+        public async Task<ActionResult<Produto>> GetByIdAsync(int id)
         {
             try
             {
-                var produto = _context.Produtos.AsNoTracking().FirstOrDefault(p => p.ProdutoId == id);
-                if (produto == null) return NotFound($"O produto com o id({id} informado não existe.");
+                var produto = await _context.Produtos.AsNoTracking().FirstOrDefaultAsync(p => p.ProdutoId == id);
+                if (produto == null) return NotFound($"O produto com o id({id}) informado não existe.");
 
                 return Ok(produto);
             }
@@ -53,12 +54,12 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] Produto produtoRequest)
+        public async Task<ActionResult> PostAsync([FromBody] Produto produtoRequest)
         {
             try
             {
-                _context.Produtos.Add(produtoRequest);
-                _context.SaveChanges();
+                await _context.Produtos.AddAsync(produtoRequest);
+                await _context.SaveChangesAsync();
 
                 return new CreatedAtRouteResult("ObterProdutoPorId", new { id = produtoRequest.ProdutoId },
                     produtoRequest);
@@ -71,17 +72,17 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpPut("{id:int:min(1)}")]
-        public ActionResult Put(int id, [FromBody] Produto produtoRequest)
+        public async Task<ActionResult> PutAsync(int id, [FromBody] Produto produtoRequest)
         {
             try
             {
                 if (id != produtoRequest.ProdutoId) return BadRequest();
 
-                var produto = _context.Produtos.AsNoTracking().FirstOrDefault(p => p.ProdutoId == id);
-                if (produto == null) return NotFound($"O produto de id({id} não foi encontrado.");
+                var produto = await _context.Produtos.AsNoTracking().FirstOrDefaultAsync(p => p.ProdutoId == id);
+                if (produto == null) return NotFound($"O produto de id({id}) não foi encontrado.");
 
                 _context.Entry(produtoRequest).State = EntityState.Modified;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 return Ok();
             }
@@ -93,15 +94,15 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpDelete("{id:int:min(1)}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
             try
             {
-                var produto = _context.Produtos.FirstOrDefault(p => p.ProdutoId == id);
-                if (produto == null) return NotFound($"O produto de id({id} não foi encontrado.");
+                var produto = await _context.Produtos.FirstOrDefaultAsync(p => p.ProdutoId == id);
+                if (produto == null) return NotFound($"O produto de id({id}) não foi encontrado.");
 
                 _context.Produtos.Remove(produto);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 return NoContent();
             }
