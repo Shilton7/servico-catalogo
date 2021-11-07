@@ -1,4 +1,5 @@
 using CatalogoAPI.Context;
+using CatalogoAPI.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,8 @@ namespace CatalogoAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CatalogoAPI", Version = "v1" });
             });
+
+            services.AddScoped<ApiLoggingFilter>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

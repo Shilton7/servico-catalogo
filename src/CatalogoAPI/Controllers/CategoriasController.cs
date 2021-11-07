@@ -1,4 +1,5 @@
 ﻿using CatalogoAPI.Context;
+using CatalogoAPI.Filters;
 using CatalogoAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,7 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpGet]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
         public async Task<ActionResult<IEnumerable<Categoria>>> GetAsync()
         {
             try
@@ -72,6 +74,7 @@ namespace CatalogoAPI.Controllers
             return Ok(categoria);
         }
 
+        [ServiceFilter(typeof(ApiLoggingFilter))]
         [HttpPost]
         public async Task<ActionResult> PostAsync([FromBody] Categoria categoriaRequest)
         {
