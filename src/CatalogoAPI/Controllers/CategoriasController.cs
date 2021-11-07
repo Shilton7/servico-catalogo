@@ -135,5 +135,11 @@ namespace CatalogoAPI.Controllers
             }
         }
 
+        [HttpGet("/test/global-exception")]
+        public string GlobalException()
+        {
+            throw new Exception("Testing the return global exception");
+        }
+
     }
 }
