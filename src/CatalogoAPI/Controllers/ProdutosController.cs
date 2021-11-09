@@ -1,4 +1,6 @@
-﻿using CatalogoAPI.Models;
+﻿using AutoMapper;
+using CatalogoAPI.DTOs;
+using CatalogoAPI.Models;
 using CatalogoAPI.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,19 +15,23 @@ namespace CatalogoAPI.Controllers
     public class ProdutosController : ControllerBase
     {
         private readonly IUnitOfWork _uof;
+        private readonly IMapper _mapper;
 
-        public ProdutosController(IUnitOfWork context)
+        public ProdutosController(IUnitOfWork context, IMapper mapper)
         {
             _uof = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Produto>> Get()
+        public ActionResult<IEnumerable<ProdutoDTO>> Get()
         {
             try
             {
                 var produtos = _uof.ProdutoRepository.Get().ToList();
-                return Ok(produtos);
+                var produtosDTO = _mapper.Map<IEnumerable<ProdutoDTO>>(produtos);
+
+                return Ok(produtosDTO);
             }
             catch (Exception)
             {
@@ -35,14 +41,16 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpGet("{id:int:min(1)}", Name = "ObterProdutoPorId")]
-        public ActionResult<Produto> GetById(int id)
+        public ActionResult<ProdutoDTO> GetById(int id)
         {
             try
             {
                 var produto = _uof.ProdutoRepository.GetById(p => p.ProdutoId == id);
                 if (produto == null) return NotFound($"O produto com o id({id}) informado não existe.");
 
-                return Ok(produto);
+                var produtoDTO = _mapper.Map<ProdutoDTO>(produto);
+
+                return Ok(produtoDTO);
             }
             catch (Exception)
             {
@@ -52,15 +60,19 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] Produto produtoRequest)
+        public ActionResult Post([FromBody] ProdutoDTO produtoRequest)
         {
             try
             {
-                _uof.ProdutoRepository.Add(produtoRequest);
+                var produto = _mapper.Map<Produto>(produtoRequest);
+
+                _uof.ProdutoRepository.Add(produto);
                 _uof.Commit();
 
-                return new CreatedAtRouteResult("ObterProdutoPorId", new { id = produtoRequest.ProdutoId },
-                    produtoRequest);
+                var produtoDTO = _mapper.Map<ProdutoDTO>(produto);
+
+                return new CreatedAtRouteResult("ObterProdutoPorId", new { id = produtoDTO.ProdutoId },
+                    produtoDTO);
             }
             catch (Exception)
             {
@@ -70,16 +82,17 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpPut("{id:int:min(1)}")]
-        public ActionResult Put(int id, [FromBody] Produto produtoRequest)
+        public ActionResult Put(int id, [FromBody] ProdutoDTO produtoRequest)
         {
             try
             {
                 if (id != produtoRequest.ProdutoId) return BadRequest();
 
-                var produto = _uof.ProdutoRepository.GetById(p => p.ProdutoId == id);
-                if (produto == null) return NotFound($"O produto de id({id}) não foi encontrado.");
+                var produtoExists = _uof.ProdutoRepository.GetById(p => p.ProdutoId == id);
+                if (produtoExists == null) return NotFound($"O produto de id({id}) não foi encontrado.");
 
-                _uof.ProdutoRepository.Update(produtoRequest);
+                var produto = _mapper.Map<Produto>(produtoRequest);
+                _uof.ProdutoRepository.Update(produto);
                 _uof.Commit();
 
                 return Ok();

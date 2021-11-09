@@ -35,6 +35,8 @@ namespace CatalogoAPI
                      options.UseMySql(mySqlConnectionStr, ServerVersion.AutoDetect(mySqlConnectionStr))
             );
 
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddControllers()
                     .AddNewtonsoftJson(options =>
                     {
