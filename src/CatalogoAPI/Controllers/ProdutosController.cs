@@ -1,12 +1,10 @@
-﻿using CatalogoAPI.Context;
-using CatalogoAPI.Models;
+﻿using CatalogoAPI.Models;
+using CatalogoAPI.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace CatalogoAPI.Controllers
 {
@@ -14,19 +12,19 @@ namespace CatalogoAPI.Controllers
     [ApiController]
     public class ProdutosController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IUnitOfWork _uof;
 
-        public ProdutosController(AppDbContext context)
+        public ProdutosController(IUnitOfWork context)
         {
-            _context = context;
+            _uof = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Produto>>> GetAsync()
+        public ActionResult<IEnumerable<Produto>> Get()
         {
             try
             {
-                var produtos = await _context.Produtos.AsNoTracking().ToListAsync();
+                var produtos = _uof.ProdutoRepository.Get().ToList();
                 return Ok(produtos);
             }
             catch (Exception)
@@ -37,11 +35,11 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpGet("{id:int:min(1)}", Name = "ObterProdutoPorId")]
-        public async Task<ActionResult<Produto>> GetByIdAsync(int id)
+        public ActionResult<Produto> GetById(int id)
         {
             try
             {
-                var produto = await _context.Produtos.AsNoTracking().FirstOrDefaultAsync(p => p.ProdutoId == id);
+                var produto = _uof.ProdutoRepository.GetById(p => p.ProdutoId == id);
                 if (produto == null) return NotFound($"O produto com o id({id}) informado não existe.");
 
                 return Ok(produto);
@@ -54,12 +52,12 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> PostAsync([FromBody] Produto produtoRequest)
+        public ActionResult Post([FromBody] Produto produtoRequest)
         {
             try
             {
-                await _context.Produtos.AddAsync(produtoRequest);
-                await _context.SaveChangesAsync();
+                _uof.ProdutoRepository.Add(produtoRequest);
+                _uof.Commit();
 
                 return new CreatedAtRouteResult("ObterProdutoPorId", new { id = produtoRequest.ProdutoId },
                     produtoRequest);
@@ -72,21 +70,21 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpPut("{id:int:min(1)}")]
-        public async Task<ActionResult> PutAsync(int id, [FromBody] Produto produtoRequest)
+        public ActionResult Put(int id, [FromBody] Produto produtoRequest)
         {
             try
             {
                 if (id != produtoRequest.ProdutoId) return BadRequest();
 
-                var produto = await _context.Produtos.AsNoTracking().FirstOrDefaultAsync(p => p.ProdutoId == id);
+                var produto = _uof.ProdutoRepository.GetById(p => p.ProdutoId == id);
                 if (produto == null) return NotFound($"O produto de id({id}) não foi encontrado.");
 
-                _context.Entry(produtoRequest).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
+                _uof.ProdutoRepository.Update(produtoRequest);
+                _uof.Commit();
 
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     "Ocorreu um erro ao tentar atualizar este produto.");
@@ -94,15 +92,15 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpDelete("{id:int:min(1)}")]
-        public async Task<ActionResult> DeleteAsync(int id)
+        public ActionResult Delete(int id)
         {
             try
             {
-                var produto = await _context.Produtos.FirstOrDefaultAsync(p => p.ProdutoId == id);
+                var produto = _uof.ProdutoRepository.GetById(p => p.ProdutoId == id);
                 if (produto == null) return NotFound($"O produto de id({id}) não foi encontrado.");
 
-                _context.Produtos.Remove(produto);
-                await _context.SaveChangesAsync();
+                _uof.ProdutoRepository.Remove(produto);
+                _uof.Commit();
 
                 return NoContent();
             }

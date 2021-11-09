@@ -1,13 +1,10 @@
-﻿using CatalogoAPI.Context;
-using CatalogoAPI.Filters;
+﻿using CatalogoAPI.Filters;
 using CatalogoAPI.Models;
+using CatalogoAPI.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CatalogoAPI.Controllers
 {
@@ -15,20 +12,20 @@ namespace CatalogoAPI.Controllers
     [ApiController]
     public class CategoriasController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IUnitOfWork _uof;
 
-        public CategoriasController(AppDbContext context)
+        public CategoriasController(IUnitOfWork context)
         {
-            _context = context;
+            _uof = context;
         }
 
         [HttpGet]
         [ServiceFilter(typeof(ApiLoggingFilter))]
-        public async Task<ActionResult<IEnumerable<Categoria>>> GetAsync()
+        public ActionResult<IEnumerable<Categoria>> Get()
         {
             try
             {
-                var categorias = await _context.Categorias.AsNoTracking().ToListAsync();
+                var categorias = _uof.CategoriaRepository.Get();
                 return Ok(categorias);
             }
             catch (Exception)
@@ -40,11 +37,11 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpGet("produtos")]
-        public async Task<ActionResult<IEnumerable<Categoria>>> GetCategoriasProdutosAsync()
+        public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
         {
             try
             {
-                var categoria = await _context.Categorias.Include(c => c.Produtos).ToListAsync();
+                var categoria = _uof.CategoriaRepository.GetCategoriasProdutos();
                 return Ok(categoria);
             }
             catch (Exception)
@@ -53,22 +50,22 @@ namespace CatalogoAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     "Erro ao listar as categorias juntamente com os produtos.");
             }
-            
+
         }
 
         [HttpGet("{id:int:min(1)}", Name = "ObterCategoriaPorId")]
-        public async Task<ActionResult<Categoria>> GetByIdAsync(int id)
+        public ActionResult<Categoria> GetById(int id)
         {
-            var categoria =  await _context.Categorias.AsNoTracking().FirstOrDefaultAsync(c => c.CategoriaId == id);
+            var categoria = _uof.CategoriaRepository.GetById(c => c.CategoriaId == id);
             if (categoria == null) return NotFound("A categoria informada não foi encontrada.");
 
             return Ok(categoria);
         }
 
         [HttpGet("produtos/{id:int:min(1)}", Name = "ObterCategoriaProdutoPorId")]
-        public async Task<ActionResult<Categoria>> GetCategoriaProdutoByIdAsync(int id)
+        public ActionResult<Categoria> GetCategoriaProdutoById(int id)
         {
-            var categoria = await _context.Categorias.Include(c => c.Produtos).FirstOrDefaultAsync(c => c.CategoriaId == id);
+            var categoria = _uof.CategoriaRepository.GetCategoriaProdutoById(id);
             if (categoria == null) return NotFound("A categoria informada não foi encontrada.");
 
             return Ok(categoria);
@@ -76,12 +73,12 @@ namespace CatalogoAPI.Controllers
 
         [ServiceFilter(typeof(ApiLoggingFilter))]
         [HttpPost]
-        public async Task<ActionResult> PostAsync([FromBody] Categoria categoriaRequest)
+        public ActionResult Post([FromBody] Categoria categoriaRequest)
         {
             try
             {
-               await _context.Categorias.AddAsync(categoriaRequest);
-               await _context.SaveChangesAsync();
+                _uof.CategoriaRepository.Add(categoriaRequest);
+                _uof.Commit();
 
                 return new CreatedAtRouteResult("ObterCategoriaPorId", new { id = categoriaRequest.CategoriaId },
                     categoriaRequest);
@@ -94,21 +91,22 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpPut("{id:int:min(1)}")]
-        public async Task<ActionResult> PutAsync(int id, [FromBody] Categoria categoriaRequest)
+        public ActionResult Put(int id, [FromBody] Categoria categoriaRequest)
         {
             try
             {
+                
                 if (id != categoriaRequest.CategoriaId) return BadRequest();
 
-                var categoria = await _context.Categorias.AsNoTracking().FirstOrDefaultAsync(c => c.CategoriaId == id);
+                var categoria = _uof.CategoriaRepository.GetById(c => c.CategoriaId == id);
                 if (categoria == null) return NotFound("A categoria informada não foi encontrada.");
-
-                _context.Entry(categoriaRequest).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
+                
+                _uof.CategoriaRepository.Update(categoriaRequest);
+                _uof.Commit();
 
                 return Ok($"Categoria com id ({id}) foi atualizada com sucesso!");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     "Ocorreu um erro ao atualizar esta categoria.");
@@ -116,15 +114,15 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpDelete("{id:int:min(1)}")]
-        public async Task<ActionResult> DeleteAsync(int id)
+        public ActionResult Delete(int id)
         {
             try
             {
-                var categoria = await _context.Categorias.FirstOrDefaultAsync(c => c.CategoriaId == id);
+                var categoria = _uof.CategoriaRepository.GetById(c => c.CategoriaId == id);
                 if (categoria == null) return NotFound($"A categoria com id={id} não foi encontrada.");
 
-                _context.Categorias.Remove(categoria);
-                await _context.SaveChangesAsync();
+                _uof.CategoriaRepository.Remove(categoria);
+                _uof.Commit();
 
                 return NoContent();
             }
