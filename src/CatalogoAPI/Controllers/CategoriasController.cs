@@ -4,6 +4,7 @@ using CatalogoAPI.Filters;
 using CatalogoAPI.Models;
 using CatalogoAPI.Pagination;
 using CatalogoAPI.Repository.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -12,6 +13,7 @@ using System.Collections.Generic;
 
 namespace CatalogoAPI.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/categorias")]
     [ApiController]
     public class CategoriasController : ControllerBase

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace CatalogoAPI.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/produtos")]
     [ApiController]
     public class ProdutosController : ControllerBase
