@@ -21,6 +21,9 @@ namespace CatalogoAPI.Models
         public string Descricao { get; set; }
 
         [Required]
+        [DataType(DataType.Currency)]
+        [Column(TypeName = "decimal(8,2)")]
+        [Range(1,10000, ErrorMessage = "O valor do produto deve estar entre {1} e {2}")]
         public decimal Valor { get; set; }
 
         [Required]
