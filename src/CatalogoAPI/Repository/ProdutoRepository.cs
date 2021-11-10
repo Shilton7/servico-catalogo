@@ -1,8 +1,8 @@
-﻿using CatalogoAPI.Context;
+﻿using CatalogoAPI.Configuration.Pagination;
+using CatalogoAPI.Context;
 using CatalogoAPI.Models;
-using CatalogoAPI.Parameters;
+using CatalogoAPI.Pagination;
 using CatalogoAPI.Repository.Interfaces;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace CatalogoAPI.Repository
@@ -14,12 +14,10 @@ namespace CatalogoAPI.Repository
         {
         }
 
-        public IEnumerable<Produto> GetProdutosPaginate(ProdutosParameters produtosParameters)
+        public PagedList<Produto> GetProdutosPaginate(ProdutosParameters produtosParameters)
         {
-            return Get().OrderBy(p => p.Nome)
-                        .Skip((produtosParameters.PageNumber -1) * produtosParameters.PageSize)
-                        .Take(produtosParameters.PageSize)
-                        .ToList();
+            return PagedList<Produto>.ToPagedList(Get().OrderBy(on => on.ProdutoId),
+                produtosParameters.PageNumber, produtosParameters.PageSize);
         }
     }
 

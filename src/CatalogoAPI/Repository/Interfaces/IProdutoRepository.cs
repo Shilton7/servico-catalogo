@@ -1,11 +1,11 @@
-﻿using CatalogoAPI.Models;
-using CatalogoAPI.Parameters;
-using System.Collections.Generic;
+﻿using CatalogoAPI.Configuration.Pagination;
+using CatalogoAPI.Models;
+using CatalogoAPI.Pagination;
 
 namespace CatalogoAPI.Repository.Interfaces
 {
     public interface IProdutoRepository : IRepository<Produto>
     {
-        IEnumerable<Produto> GetProdutosPaginate(ProdutosParameters produtosParameters);
+        PagedList<Produto> GetProdutosPaginate(ProdutosParameters produtosParameters);
     }
 }

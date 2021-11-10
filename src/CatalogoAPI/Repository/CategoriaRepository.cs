@@ -1,8 +1,9 @@
-﻿using CatalogoAPI.Context;
+﻿using CatalogoAPI.Configuration.Pagination;
+using CatalogoAPI.Context;
 using CatalogoAPI.Models;
+using CatalogoAPI.Pagination;
 using CatalogoAPI.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace CatalogoAPI.Repository
@@ -13,12 +14,11 @@ namespace CatalogoAPI.Repository
         {
         }
 
-        public IEnumerable<Categoria> GetCategoriasProdutos()
+        public PagedList<Categoria> GetCategoriasProdutos(CategoriasParameters categoriasParameters)
         {
-            return Get().AsNoTracking()
-                        .Include(c => c.Produtos)
-                        .OrderBy(c => c.Nome)
-                        .ToList();
+            return PagedList<Categoria>.ToPagedList(Get().OrderBy(on => on.CategoriaId),
+                categoriasParameters.PageNumber, categoriasParameters.PageSize);
+
         }
 
         public Categoria GetCategoriaProdutoById(int id)

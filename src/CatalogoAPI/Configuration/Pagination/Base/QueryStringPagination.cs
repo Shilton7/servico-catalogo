@@ -1,6 +1,6 @@
-﻿namespace CatalogoAPI.Parameters
+﻿namespace CatalogoAPI.Configuration.Pagination.Base
 {
-    public class ProdutosParameters
+    public abstract class QueryStringPagination
     {
         const int MAX_ITEM_PAGE = 30;
         public int PageNumber { get; set; } = 1;

@@ -2,9 +2,11 @@
 using CatalogoAPI.DTOs;
 using CatalogoAPI.Filters;
 using CatalogoAPI.Models;
+using CatalogoAPI.Pagination;
 using CatalogoAPI.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -41,11 +43,23 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpGet("produtos")]
-        public ActionResult<IEnumerable<CategoriaDTO>> GetCategoriasProdutos()
+        public ActionResult<IEnumerable<CategoriaDTO>> GetCategoriasProdutos([FromQuery] CategoriasParameters categoriasParameters)
         {
             try
             {
-                var categoria = _uof.CategoriaRepository.GetCategoriasProdutos();
+                var categoria = _uof.CategoriaRepository.GetCategoriasProdutos(categoriasParameters);
+                var metadata = new
+                {
+                    categoria.TotalCount,
+                    categoria.PageSize,
+                    categoria.CurrentPage,
+                    categoria.TotalPages,
+                    categoria.HasNext,
+                    categoria.HasPrevious
+                };
+
+                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+
                 var categoriaDTO = _mapper.Map<IEnumerable<CategoriaDTO>> (categoria);
 
                 return Ok(categoriaDTO);
