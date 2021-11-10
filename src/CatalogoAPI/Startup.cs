@@ -3,6 +3,7 @@ using CatalogoAPI.Extensions;
 using CatalogoAPI.Filters;
 using CatalogoAPI.Logging;
 using CatalogoAPI.Repository;
+using CatalogoAPI.Repository.Async.Interfaces;
 using CatalogoAPI.Repository.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +31,7 @@ namespace CatalogoAPI
             string mySqlConnectionStr = _configuration.GetConnectionString("DefaultConnection");
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUnitOfWorkAsync, UnitOfWorkAsync>();
 
             services.AddDbContext<AppDbContext>(options =>
                      options.UseMySql(mySqlConnectionStr, ServerVersion.AutoDetect(mySqlConnectionStr))

@@ -5,21 +5,12 @@ namespace CatalogoAPI.Repository
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private ProdutoRepository _produtoRepo;
         private CategoriaRepository _categoriaRepo;
         private AppDbContext _context;
 
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
-        }
-
-        public IProdutoRepository ProdutoRepository
-        {
-            get
-            {
-                return _produtoRepo = _produtoRepo ?? new ProdutoRepository(_context);
-            }
         }
 
         public ICategoriaRepository CategoriaRepository
