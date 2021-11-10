@@ -24,12 +24,12 @@
 			"response": []
 		},
 		{
-			"name": "GetAllWithProducts",
+			"name": "GetAllWithProductsPagination",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/api/categorias/produtos",
+					"raw": "{{url}}/api/categorias/produtos?pageNumber=1&pageSize=2",
 					"host": [
 						"{{url}}"
 					],
@@ -37,6 +37,16 @@
 						"api",
 						"categorias",
 						"produtos"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "2"
+						}
 					]
 				}
 			},
@@ -48,14 +58,14 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/api/categorias/50",
+					"raw": "{{url}}/api/categorias/49",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"api",
 						"categorias",
-						"50"
+						"49"
 					]
 				}
 			},
@@ -67,14 +77,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/api/categorias/42",
+					"raw": "{{url}}/api/categorias/49",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"api",
 						"categorias",
-						"42"
+						"49"
 					]
 				}
 			},
@@ -107,7 +117,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"categoriaId\": 51,\r\n        \"nome\": \"Celulares 888\",\r\n        \"imagemUrl\": \"https://a-static.mlcdn.com.br/360x270/smartphone-xiaomi-redmi-9a-32gb-cinza-4g-octa-core-2gb-ram-653-cam-13mp-selfie-5mp-dual-chip/magazineluiza/226913400/88c3dcfd9320204adbd890b07c9e9f88.jpg\"\r\n}",
+					"raw": "{\r\n    \"categoriaId\": 48,\r\n        \"nome\": \"Celulares 888 4612\",\r\n        \"imagemUrl\": \"https://a-static.mlcdn.com.br/360x270/smartphone-xiaomi-redmi-9a-32gb-cinza-4g-octa-core-2gb-ram-653-cam-13mp-selfie-5mp-dual-chip/magazineluiza/226913400/88c3dcfd9320204adbd890b07c9e9f88.jpg\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -115,14 +125,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/api/categorias/51",
+					"raw": "{{url}}/api/categorias/48",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"api",
 						"categorias",
-						"51"
+						"48"
 					]
 				}
 			},

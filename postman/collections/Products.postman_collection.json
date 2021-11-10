@@ -6,18 +6,28 @@
 	},
 	"item": [
 		{
-			"name": "GetAll",
+			"name": "GetAllWithPagination",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/api/produtos",
+					"raw": "{{url}}/api/produtos?pageNumber=5&pageSize=2",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"api",
 						"produtos"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "5"
+						},
+						{
+							"key": "pageSize",
+							"value": "2"
+						}
 					]
 				}
 			},
@@ -68,7 +78,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": " {\r\n        \"produtoid\": 24,\r\n        \"nome\": \"Motorola Moto E7 alterado 1\",\r\n        \"descricao\": \"Smartphone Motorola Moto E7 32GB\",\r\n        \"valor\": 779.11000000000000000000000000,\r\n        \"imagemUrl\": \"https://a-static.mlcdn.com.br/618x463/smartphone-motorola-moto-e7-32gb-cinza-metalico-4g-octa-core-2gb-ram-65-cam-dupla-selfie-5mp/magazineluiza/155616400/49a5043193c9a8fdaaa3b67d7d0ba1cd.jpg\",\r\n        \"estoque\": 7,\r\n        \"dataCadastro\": \"2021-11-04T14:19:20\",\r\n        \"categoriaId\": 42\r\n    }",
+					"raw": " {\r\n        \"produtoid\": 24,\r\n        \"nome\": \"Motorola Moto E7 alterado 155555555\",\r\n        \"descricao\": \"Smartphone Motorola Moto E7 32GB\",\r\n        \"valor\": 779.11000000000000000000000000,\r\n        \"imagemUrl\": \"https://a-static.mlcdn.com.br/618x463/smartphone-motorola-moto-e7-32gb-cinza-metalico-4g-octa-core-2gb-ram-65-cam-dupla-selfie-5mp/magazineluiza/155616400/49a5043193c9a8fdaaa3b67d7d0ba1cd.jpg\",\r\n        \"estoque\": 7,\r\n        \"dataCadastro\": \"2021-11-04T14:19:20\",\r\n        \"categoriaId\": 42\r\n    }",
 					"options": {
 						"raw": {
 							"language": "json"
