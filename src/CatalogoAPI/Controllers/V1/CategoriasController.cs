@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CatalogoAPI.Controllers.Base;
 using CatalogoAPI.DTOs;
 using CatalogoAPI.Filters;
 using CatalogoAPI.Models;
@@ -11,12 +12,12 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace CatalogoAPI.Controllers
+namespace CatalogoAPI.Controllers.V1
 {
+    [ApiVersion("1.0", Deprecated = true)]
     [Authorize(AuthenticationSchemes = "Bearer")]
-    [Route("api/categorias")]
-    [ApiController]
-    public class CategoriasController : ControllerBase
+    [Route("api/v{version:apiVersion}/categorias")]
+    public class CategoriasController : MainController
     {
         private readonly IUnitOfWork _uof;
         private readonly IMapper _mapper;

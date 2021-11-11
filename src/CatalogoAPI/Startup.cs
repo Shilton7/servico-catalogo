@@ -1,3 +1,4 @@
+using CatalogoAPI.Configuration.Swagger;
 using CatalogoAPI.Context;
 using CatalogoAPI.Extensions;
 using CatalogoAPI.Filters;
@@ -9,13 +10,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Linq;
 using System.Text;
 
 namespace CatalogoAPI
@@ -71,22 +76,43 @@ namespace CatalogoAPI
                         = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                     });
 
-            services.AddSwaggerGen(c =>
+            services.AddApiVersioning(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "CatalogoAPI", Version = "v1" });
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.ReportApiVersions = true;
             });
 
+            services.AddVersionedApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+            });
+
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
+            services.AddSwaggerGen(c => c.OperationFilter<SwaggerDefaultValues>());
+    
             services.AddScoped<ApiLoggingFilter>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CatalogoAPI v1"));
+                app.UseSwaggerUI(
+                options =>
+                {
+                    foreach (ApiVersionDescription apiVersionDescription in provider.ApiVersionDescriptions.OrderByDescending(a => a.ApiVersion))
+                    {
+                        string isDeprecated = apiVersionDescription.IsDeprecated ? " (DEPRECATED)" : string.Empty;
+                        options.SwaggerEndpoint($"/swagger/{apiVersionDescription.GroupName}/swagger.json",
+                            $"{apiVersionDescription.GroupName.ToUpperInvariant()}{isDeprecated}");
+                    }
+                });
             }
 
             loggerFactory.AddProvider(new CustomLoggerProvider(new CustomLoggerProviderConfig
@@ -103,7 +129,9 @@ namespace CatalogoAPI
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseCors(opt => opt.AllowAnyOrigin());
+            app.UseCors(opt => opt.AllowAnyMethod()
+                                          .AllowAnyOrigin()
+                                          .AllowAnyHeader());
 
             app.UseEndpoints(endpoints =>
             {

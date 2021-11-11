@@ -1,4 +1,5 @@
-﻿using CatalogoAPI.DTOs;
+﻿using CatalogoAPI.Controllers.Base;
+using CatalogoAPI.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -11,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace CatalogoAPI.Controllers
 {
-    [Route("api/authentication")]
-    [ApiController]
-    public class AuthController : ControllerBase
+    [ApiVersion("1.0", Deprecated = true)]
+    [Route("api/v{version:apiVersion}/authentication")]
+    public class AuthController : MainController
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;

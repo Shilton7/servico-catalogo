@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CatalogoAPI.Controllers.Base;
 using CatalogoAPI.DTOs;
 using CatalogoAPI.Models;
 using CatalogoAPI.Pagination;
@@ -11,12 +12,12 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CatalogoAPI.Controllers
+namespace CatalogoAPI.Controllers.V1
 {
+    [ApiVersion("1.0", Deprecated = true)]
     [Authorize(AuthenticationSchemes = "Bearer")]
-    [Route("api/produtos")]
-    [ApiController]
-    public class ProdutosController : ControllerBase
+    [Route("api/v{version:apiVersion}/produtos")]
+    public class ProdutosController : MainController
     {
         private readonly IUnitOfWorkAsync _uof;
         private readonly IMapper _mapper;
