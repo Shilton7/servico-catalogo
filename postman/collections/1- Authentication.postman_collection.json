@@ -1,0 +1,83 @@
+{
+	"info": {
+		"_postman_id": "0c569cfb-c676-447f-9f55-24fe360cbc6e",
+		"name": "1- Authentication",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Online Service",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/authentication",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"authentication"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Created User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Email\": \"shilton@gmail.com\",\r\n    \"Password\": \"Shilton@10\",\r\n    \"ConfirmPassword\": \"Shilton@10\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/authentication/register",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"authentication",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Email\": \"shilton@gmail.com\",\r\n    \"Password\": \"Shilton@10\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/authentication/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"authentication",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

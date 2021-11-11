@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "37357a55-999b-49ec-9c47-be5cdf811844",
-		"name": "Global Exception",
+		"name": "4- Global Exception",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -9,7 +9,13 @@
 			"name": "Testing  global exception",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{auth_token}}",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{url}}/test/global-exception",
 					"host": [

@@ -1,15 +1,24 @@
 {
 	"info": {
 		"_postman_id": "3bb489c5-aa67-45d4-9c9d-b9fa5650d88a",
-		"name": "Categories",
+		"name": "2- Categories",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "GetAll",
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{auth_token}}",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{url}}/api/categorias",
 					"host": [
@@ -27,7 +36,13 @@
 			"name": "GetAllWithProductsPagination",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{auth_token}}",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{url}}/api/categorias/produtos?pageNumber=1&pageSize=2",
 					"host": [
@@ -56,7 +71,13 @@
 			"name": "Delete",
 			"request": {
 				"method": "DELETE",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{auth_token}}",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{url}}/api/categorias/49",
 					"host": [
@@ -75,16 +96,22 @@
 			"name": "GetById",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{auth_token}}",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "{{url}}/api/categorias/49",
+					"raw": "{{url}}/api/categorias/68",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"api",
 						"categorias",
-						"49"
+						"68"
 					]
 				}
 			},
@@ -94,9 +121,15 @@
 			"name": "GetWithProductsById",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{auth_token}}",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "{{url}}/api/categorias/produtos/42",
+					"raw": "{{url}}/api/categorias/produtos/68",
 					"host": [
 						"{{url}}"
 					],
@@ -104,7 +137,7 @@
 						"api",
 						"categorias",
 						"produtos",
-						"42"
+						"68"
 					]
 				}
 			},
@@ -114,7 +147,13 @@
 			"name": "Updated",
 			"request": {
 				"method": "PUT",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{auth_token}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n    \"categoriaId\": 48,\r\n        \"nome\": \"Celulares 888 4612\",\r\n        \"imagemUrl\": \"https://a-static.mlcdn.com.br/360x270/smartphone-xiaomi-redmi-9a-32gb-cinza-4g-octa-core-2gb-ram-653-cam-13mp-selfie-5mp-dual-chip/magazineluiza/226913400/88c3dcfd9320204adbd890b07c9e9f88.jpg\"\r\n}",
@@ -142,7 +181,13 @@
 			"name": "Created",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{auth_token}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n        \"nome\": \"Celulares 2\",\r\n        \"imagemUrl\": \"https://a-static.mlcdn.com.br/360x270/smartphone-xiaomi-redmi-9a-32gb-cinza-4g-octa-core-2gb-ram-653-cam-13mp-selfie-5mp-dual-chip/magazineluiza/226913400/88c3dcfd9320204adbd890b07c9e9f88.jpg\"\r\n}",
@@ -164,6 +209,40 @@
 				}
 			},
 			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.sendRequest({",
+					"    url: pm.environment.get(\"url\") + '/api/authentication/login',",
+					"    method: 'POST',",
+					"    header: {",
+					"        'content-type': 'application/json'",
+					"    },",
+					"    body: {",
+					"        mode: 'raw',",
+					"        raw: JSON.stringify({ ",
+					"            email: pm.environment.get(\"email\"), ",
+					"            password: pm.environment.get(\"password\") })",
+					"    }",
+					"}, function (err, res) {",
+					"    pm.environment.set(\"auth_token\", \"Bearer \" + res.json().token);",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }

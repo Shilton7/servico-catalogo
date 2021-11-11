@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "2b04475c-3cb5-4598-87e1-fe7b556b3e4b",
-		"name": "Products",
+		"name": "3- Products",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -9,9 +9,15 @@
 			"name": "GetAllWithPagination",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{auth_token}}",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "{{url}}/api/produtos?pageNumber=5&pageSize=2",
+					"raw": "{{url}}/api/produtos?pageNumber=1&pageSize=20",
 					"host": [
 						"{{url}}"
 					],
@@ -22,11 +28,11 @@
 					"query": [
 						{
 							"key": "pageNumber",
-							"value": "5"
+							"value": "1"
 						},
 						{
 							"key": "pageSize",
-							"value": "2"
+							"value": "20"
 						}
 					]
 				}
@@ -37,16 +43,22 @@
 			"name": "Delete",
 			"request": {
 				"method": "DELETE",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{auth_token}}",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "{{url}}/api/produtos/23",
+					"raw": "{{url}}/api/produtos/28",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"api",
 						"produtos",
-						"23"
+						"28"
 					]
 				}
 			},
@@ -56,7 +68,13 @@
 			"name": "GetById",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{auth_token}}",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{url}}/api/produtos/24",
 					"host": [
@@ -75,7 +93,13 @@
 			"name": "Updated",
 			"request": {
 				"method": "PUT",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{auth_token}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": " {\r\n        \"produtoid\": 24,\r\n        \"nome\": \"Motorola Moto E7 alterado 155555555\",\r\n        \"descricao\": \"Smartphone Motorola Moto E7 32GB\",\r\n        \"valor\": 779.11000000000000000000000000,\r\n        \"imagemUrl\": \"https://a-static.mlcdn.com.br/618x463/smartphone-motorola-moto-e7-32gb-cinza-metalico-4g-octa-core-2gb-ram-65-cam-dupla-selfie-5mp/magazineluiza/155616400/49a5043193c9a8fdaaa3b67d7d0ba1cd.jpg\",\r\n        \"estoque\": 7,\r\n        \"dataCadastro\": \"2021-11-04T14:19:20\",\r\n        \"categoriaId\": 42\r\n    }",
@@ -103,7 +127,13 @@
 			"name": "Created",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{auth_token}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n        \"nome\": \"Motorola Moto E7\",\r\n        \"descricao\": \"Smartphone Motorola Moto E7 32GB\",\r\n        \"valor\": 779.11,\r\n        \"imagemUrl\": \"https://a-static.mlcdn.com.br/618x463/smartphone-motorola-moto-e7-32gb-cinza-metalico-4g-octa-core-2gb-ram-65-cam-dupla-selfie-5mp/magazineluiza/155616400/49a5043193c9a8fdaaa3b67d7d0ba1cd.jpg\",\r\n        \"estoque\": 7,\r\n        \"dataCadastro\": \"2021-11-04T14:19:20\",\r\n        \"categoriaId\": 42\r\n    }",
@@ -125,6 +155,40 @@
 				}
 			},
 			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.sendRequest({",
+					"    url: pm.environment.get(\"url\") + '/api/authentication/login',",
+					"    method: 'POST',",
+					"    header: {",
+					"        'content-type': 'application/json'",
+					"    },",
+					"    body: {",
+					"        mode: 'raw',",
+					"        raw: JSON.stringify({ ",
+					"            email: pm.environment.get(\"email\"), ",
+					"            password: pm.environment.get(\"password\") })",
+					"    }",
+					"}, function (err, res) {",
+					"    pm.environment.set(\"auth_token\", \"Bearer \" + res.json().token);",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
