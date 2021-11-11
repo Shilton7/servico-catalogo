@@ -32,6 +32,8 @@ namespace CatalogoAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+
             string mySqlConnectionStr = _configuration.GetConnectionString("DefaultConnection");
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -100,6 +102,8 @@ namespace CatalogoAPI
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseCors(opt => opt.AllowAnyOrigin());
 
             app.UseEndpoints(endpoints =>
             {
