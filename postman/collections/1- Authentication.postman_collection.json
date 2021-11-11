@@ -11,12 +11,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/api/authentication",
+					"raw": "{{url}}/api/v2/authentication",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"api",
+						"v2",
 						"authentication"
 					]
 				}
@@ -38,12 +39,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/api/authentication/register",
+					"raw": "{{url}}/api/v2/authentication/register",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"api",
+						"v2",
 						"authentication",
 						"register"
 					]
@@ -66,12 +68,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/api/authentication/login",
+					"raw": "{{url}}/api/v2/authentication/login",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"api",
+						"v2",
 						"authentication",
 						"login"
 					]

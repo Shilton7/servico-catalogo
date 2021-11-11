@@ -17,12 +17,13 @@
 					}
 				],
 				"url": {
-					"raw": "{{url}}/api/produtos?pageNumber=1&pageSize=20",
+					"raw": "{{url}}/api/v2/produtos?pageNumber=1&pageSize=20",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"api",
+						"v2",
 						"produtos"
 					],
 					"query": [
@@ -51,12 +52,13 @@
 					}
 				],
 				"url": {
-					"raw": "{{url}}/api/produtos/28",
+					"raw": "{{url}}/api/v2/produtos/28",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"api",
+						"v2",
 						"produtos",
 						"28"
 					]
@@ -76,12 +78,13 @@
 					}
 				],
 				"url": {
-					"raw": "{{url}}/api/produtos/24",
+					"raw": "{{url}}/api/v2/produtos/24",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"api",
+						"v2",
 						"produtos",
 						"24"
 					]
@@ -110,12 +113,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/api/produtos/24",
+					"raw": "{{url}}/api/v2/produtos/24",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"api",
+						"v2",
 						"produtos",
 						"24"
 					]
@@ -144,12 +148,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/api/produtos",
+					"raw": "{{url}}/api/v2/produtos",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"api",
+						"v2",
 						"produtos"
 					]
 				}
@@ -164,7 +169,7 @@
 				"type": "text/javascript",
 				"exec": [
 					"pm.sendRequest({",
-					"    url: pm.environment.get(\"url\") + '/api/authentication/login',",
+					"    url: pm.environment.get(\"url\") + '/api/v2/authentication/login',",
 					"    method: 'POST',",
 					"    header: {",
 					"        'content-type': 'application/json'",
