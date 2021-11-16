@@ -1,5 +1,6 @@
 ﻿using CatalogoAPI.Controllers.Base;
 using CatalogoAPI.DTOs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -30,12 +31,14 @@ namespace CatalogoAPI.Controllers.V2
         }
 
         [HttpGet]
+        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Get))]
         public ActionResult<string> Get()
         {
             return "AuthController :: Acessado em : " + DateTime.Now.ToLongDateString();
         }
 
         [HttpPost("register")]
+        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Post))]
         public async Task<ActionResult> RegisterUser([FromBody] UsuarioDTO usuarioDTORequest)
         {
             var user = new IdentityUser
@@ -60,6 +63,7 @@ namespace CatalogoAPI.Controllers.V2
         /// <returns>Status 200 e o token do usuário</returns>
         /// <remarks>Status 200 e o token do usuário</remarks>
         [HttpPost("login")]
+        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Post))]
         public async Task<ActionResult> Login([FromBody] UsuarioDTO usuarioDTORequest)
         {
             var result = await _signInManager.PasswordSignInAsync(usuarioDTORequest.Email,
