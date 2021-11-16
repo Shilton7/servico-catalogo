@@ -4,22 +4,6 @@
         <name>CatalogoAPI</name>
     </assembly>
     <members>
-        <member name="T:CatalogoAPI.Configuration.Swagger.ConfigureSwaggerOptions">
-            <summary>
-            Configures the Swagger generation options.
-            </summary>
-            <remarks>This allows API versioning to define a Swagger document per API version after the
-            <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.IApiVersionDescriptionProvider"/> service has been resolved from the service container.</remarks>
-        </member>
-        <member name="M:CatalogoAPI.Configuration.Swagger.ConfigureSwaggerOptions.#ctor(Microsoft.AspNetCore.Mvc.ApiExplorer.IApiVersionDescriptionProvider)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CatalogoAPI.Configuration.Swagger.ConfigureSwaggerOptions"/> class.
-            </summary>
-            <param name="provider">The <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.IApiVersionDescriptionProvider">provider</see> used to generate Swagger documents.</param>
-        </member>
-        <member name="M:CatalogoAPI.Configuration.Swagger.ConfigureSwaggerOptions.Configure(Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions)">
-            <inheritdoc />
-        </member>
         <member name="T:CatalogoAPI.Configuration.Swagger.SwaggerDefaultValues">
             <summary>
             Represents the Swagger/Swashbuckle operation filter used to document the implicit API version parameter.
@@ -33,6 +17,22 @@
             </summary>
             <param name="operation">The operation to apply the filter to.</param>
             <param name="context">The current operation filter context.</param>
+        </member>
+        <member name="T:CatalogoAPI.Configuration.Swagger.SwaggerOptions">
+            <summary>
+            Configures the Swagger generation options.
+            </summary>
+            <remarks>This allows API versioning to define a Swagger document per API version after the
+            <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.IApiVersionDescriptionProvider"/> service has been resolved from the service container.</remarks>
+        </member>
+        <member name="M:CatalogoAPI.Configuration.Swagger.SwaggerOptions.#ctor(Microsoft.AspNetCore.Mvc.ApiExplorer.IApiVersionDescriptionProvider)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CatalogoAPI.Configuration.Swagger.SwaggerOptions"/> class.
+            </summary>
+            <param name="provider">The <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.IApiVersionDescriptionProvider">provider</see> used to generate Swagger documents.</param>
+        </member>
+        <member name="M:CatalogoAPI.Configuration.Swagger.SwaggerOptions.Configure(Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions)">
+            <inheritdoc />
         </member>
         <member name="M:CatalogoAPI.Controllers.V2.AuthController.Login(CatalogoAPI.DTOs.UsuarioDTO)">
             <summary>

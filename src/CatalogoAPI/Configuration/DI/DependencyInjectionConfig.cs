@@ -16,7 +16,7 @@ namespace CatalogoAPI.Configuration.DI
             services.AddScoped<AppDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUnitOfWorkAsync, UnitOfWorkAsync>();
-            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerOptions>();
 
             return services;
         }
