@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CatalogoAPI</name>
+    </assembly>
+    <members>
+        <member name="T:CatalogoAPI.Configuration.Swagger.ConfigureSwaggerOptions">
+            <summary>
+            Configures the Swagger generation options.
+            </summary>
+            <remarks>This allows API versioning to define a Swagger document per API version after the
+            <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.IApiVersionDescriptionProvider"/> service has been resolved from the service container.</remarks>
+        </member>
+        <member name="M:CatalogoAPI.Configuration.Swagger.ConfigureSwaggerOptions.#ctor(Microsoft.AspNetCore.Mvc.ApiExplorer.IApiVersionDescriptionProvider)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CatalogoAPI.Configuration.Swagger.ConfigureSwaggerOptions"/> class.
+            </summary>
+            <param name="provider">The <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.IApiVersionDescriptionProvider">provider</see> used to generate Swagger documents.</param>
+        </member>
+        <member name="M:CatalogoAPI.Configuration.Swagger.ConfigureSwaggerOptions.Configure(Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:CatalogoAPI.Configuration.Swagger.SwaggerDefaultValues">
+            <summary>
+            Represents the Swagger/Swashbuckle operation filter used to document the implicit API version parameter.
+            </summary>
+            <remarks>This <see cref="T:Swashbuckle.AspNetCore.SwaggerGen.IOperationFilter"/> is only required due to bugs in the <see cref="T:Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator"/>.
+            Once they are fixed and published, this class can be removed.</remarks>
+        </member>
+        <member name="M:CatalogoAPI.Configuration.Swagger.SwaggerDefaultValues.Apply(Microsoft.OpenApi.Models.OpenApiOperation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)">
+            <summary>
+            Applies the filter to the specified operation using the given context.
+            </summary>
+            <param name="operation">The operation to apply the filter to.</param>
+            <param name="context">The current operation filter context.</param>
+        </member>
+        <member name="M:CatalogoAPI.Controllers.V2.AuthController.Login(CatalogoAPI.DTOs.UsuarioDTO)">
+            <summary>
+            Verifica as credenciais de um usuário
+            </summary>
+            <param name="usuarioDTORequest">Um objeto do tipo UsuarioDTO</param>
+            <returns>Status 200 e o token do usuário</returns>
+            <remarks>Status 200 e o token do usuário</remarks>
+        </member>
+        <member name="M:CatalogoAPI.Controllers.V2.CategoriasController.GetById(System.Int32)">
+            <summary>
+            Obtem uma categoria pelo seu Id
+            </summary>
+            <param name="id">código da categoria</param>
+            <returns>Um Objeto de categoria</returns>
+        </member>
+        <member name="M:CatalogoAPI.Controllers.V2.CategoriasController.Post(CatalogoAPI.DTOs.CategoriaDTO)">
+            <summary>
+            Inclui uma nova categoria
+            </summary>
+            <remarks>
+            Exemplo de request:
+            
+                POST api/v2/categorias
+                {
+                    "nome": "Celulares 2",
+                    "imagemUrl": "http://123.jpg"
+                }
+            </remarks>
+            <param name="categoriaRequest">Um Objeto do tipo CategoriaDTO</param>
+            <returns>O objeto Categoria foi incluido</returns>
+            <remarks>Retorna um objeto Categoria incluído</remarks>
+        </member>
+    </members>
+</doc>

@@ -20,7 +20,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace CatalogoAPI
@@ -69,13 +72,6 @@ namespace CatalogoAPI
 
             services.AddAutoMapper(typeof(Startup));
 
-            services.AddControllers()
-                    .AddNewtonsoftJson(options =>
-                    {
-                        options.SerializerSettings.ReferenceLoopHandling
-                        = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                    });
-
             services.AddApiVersioning(options =>
             {
                 options.AssumeDefaultVersionWhenUnspecified = true;
@@ -91,8 +87,22 @@ namespace CatalogoAPI
 
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
-            services.AddSwaggerGen(c => c.OperationFilter<SwaggerDefaultValues>());
-    
+            services.AddSwaggerGen(c =>
+            {
+                c.OperationFilter<SwaggerDefaultValues>();
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
+
+            services.AddControllers()
+                    .AddNewtonsoftJson(options =>
+                     {
+                         options.SerializerSettings.ReferenceLoopHandling
+                          = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                     });
+
             services.AddScoped<ApiLoggingFilter>();
         }
 

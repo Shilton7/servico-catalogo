@@ -53,6 +53,12 @@ namespace CatalogoAPI.Controllers.V2
             return Ok(GeraToken(usuarioDTORequest));
         }
 
+        /// <summary>
+        /// Verifica as credenciais de um usuário
+        /// </summary>
+        /// <param name="usuarioDTORequest">Um objeto do tipo UsuarioDTO</param>
+        /// <returns>Status 200 e o token do usuário</returns>
+        /// <remarks>Status 200 e o token do usuário</remarks>
         [HttpPost("login")]
         public async Task<ActionResult> Login([FromBody] UsuarioDTO usuarioDTORequest)
         {

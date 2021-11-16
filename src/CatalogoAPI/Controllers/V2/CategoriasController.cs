@@ -76,6 +76,11 @@ namespace CatalogoAPI.Controllers.V2
 
         }
 
+        /// <summary>
+        /// Obtem uma categoria pelo seu Id
+        /// </summary>
+        /// <param name="id">código da categoria</param>
+        /// <returns>Um Objeto de categoria</returns>
         [HttpGet("{id:int:min(1)}", Name = "ObterCategoriaPorId")]
         public ActionResult<CategoriaDTO> GetById(int id)
         {
@@ -98,6 +103,21 @@ namespace CatalogoAPI.Controllers.V2
             return Ok(categoriaDTO);
         }
 
+        /// <summary>
+        /// Inclui uma nova categoria
+        /// </summary>
+        /// <remarks>
+        /// Exemplo de request:
+        /// 
+        ///     POST api/v2/categorias
+        ///     {
+        ///         "nome": "Celulares 2",
+        ///         "imagemUrl": "http://123.jpg"
+        ///     }
+        /// </remarks>
+        /// <param name="categoriaRequest">Um Objeto do tipo CategoriaDTO</param>
+        /// <returns>O objeto Categoria foi incluido</returns>
+        /// <remarks>Retorna um objeto Categoria incluído</remarks>
         [ServiceFilter(typeof(ApiLoggingFilter))]
         [HttpPost]
         public ActionResult Post([FromBody] CategoriaDTO categoriaRequest)
