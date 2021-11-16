@@ -16,6 +16,7 @@ namespace CatalogoAPI.Controllers.V2
 {
     [ApiVersion("2.0")]
     [Authorize(AuthenticationSchemes = "Bearer")]
+    [ApiConventionType(typeof(DefaultApiConventions))]
     [Route("api/v{version:apiVersion}/produtos")]
     public class ProdutosController : MainController
     {
