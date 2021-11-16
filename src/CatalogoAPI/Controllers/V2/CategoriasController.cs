@@ -29,6 +29,9 @@ namespace CatalogoAPI.Controllers.V2
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(CategoriaDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ServiceFilter(typeof(ApiLoggingFilter))]
         public ActionResult<IEnumerable<CategoriaDTO>> Get()
         {
@@ -46,6 +49,10 @@ namespace CatalogoAPI.Controllers.V2
         }
 
         [HttpGet("produtos")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(CategoriaDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<IEnumerable<CategoriaDTO>> GetCategoriasProdutos([FromQuery] CategoriasParameters categoriasParameters)
         {
             try
@@ -82,6 +89,11 @@ namespace CatalogoAPI.Controllers.V2
         /// <param name="id">código da categoria</param>
         /// <returns>Um Objeto de categoria</returns>
         [HttpGet("{id:int:min(1)}", Name = "ObterCategoriaPorId")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(CategoriaDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<CategoriaDTO> GetById(int id)
         {
             var categoria = _uof.CategoriaRepository.GetById(c => c.CategoriaId == id);
@@ -93,6 +105,11 @@ namespace CatalogoAPI.Controllers.V2
         }
 
         [HttpGet("produtos/{id:int:min(1)}", Name = "ObterCategoriaProdutoPorId")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(CategoriaDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<CategoriaDTO> GetCategoriaProdutoById(int id)
         {
             var categoria = _uof.CategoriaRepository.GetCategoriaProdutoById(id);
@@ -120,6 +137,10 @@ namespace CatalogoAPI.Controllers.V2
         /// <remarks>Retorna um objeto Categoria incluído</remarks>
         [ServiceFilter(typeof(ApiLoggingFilter))]
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(CategoriaDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult Post([FromBody] CategoriaDTO categoriaRequest)
         {
             try
@@ -142,6 +163,11 @@ namespace CatalogoAPI.Controllers.V2
         }
 
         [HttpPut("{id:int:min(1)}")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(CategoriaDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Put(int id, [FromBody] CategoriaDTO categoriaRequest)
         {
             try
@@ -167,6 +193,11 @@ namespace CatalogoAPI.Controllers.V2
         }
 
         [HttpDelete("{id:int:min(1)}")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Delete(int id)
         {
             try
@@ -187,6 +218,8 @@ namespace CatalogoAPI.Controllers.V2
         }
 
         [HttpGet("/test/global-exception")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public string GlobalException()
         {
             throw new Exception("Testing the return global exception");
