@@ -1,15 +1,12 @@
 using CatalogoAPI.Configuration;
+using CatalogoAPI.Configuration.DI;
+using CatalogoAPI.Configuration.IdentityServer;
 using CatalogoAPI.Configuration.Swagger;
 using CatalogoAPI.Context;
 using CatalogoAPI.Filters;
 using CatalogoAPI.Logging;
-using CatalogoAPI.Repository;
-using CatalogoAPI.Repository.Async.Interfaces;
-using CatalogoAPI.Repository.Interfaces;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
@@ -17,15 +14,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace CatalogoAPI
 {
@@ -41,34 +34,13 @@ namespace CatalogoAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             string mySqlConnectionStr = _configuration.GetConnectionString("DefaultConnection");
-
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IUnitOfWorkAsync, UnitOfWorkAsync>();
 
             services.AddDbContext<AppDbContext>(options =>
                      options.UseMySql(mySqlConnectionStr, ServerVersion.AutoDetect(mySqlConnectionStr))
             );
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                    .AddEntityFrameworkStores<AppDbContext>()
-                    .AddDefaultTokenProviders();
-
-            services.AddAuthentication(
-                JwtBearerDefaults.AuthenticationScheme).
-                AddJwtBearer(options =>
-                 options.TokenValidationParameters = new TokenValidationParameters
-                 {
-                     ValidateIssuer = true,
-                     ValidateAudience = true,
-                     ValidateLifetime = true,
-                     ValidAudience = _configuration["AppSettingsJWT:Audience"],
-                     ValidIssuer = _configuration["AppSettingsJWT:Issuer"],
-                     ValidateIssuerSigningKey = true,
-                     IssuerSigningKey = new SymmetricSecurityKey(
-                         Encoding.UTF8.GetBytes(_configuration["AppSettingsJWT:Secret"]))
-                 });
+            services.AddIdentityConfiguration(_configuration);
 
             services.AddAutoMapper(typeof(Startup));
 
@@ -86,8 +58,6 @@ namespace CatalogoAPI
                 options.GroupNameFormat = "'v'VVV";
                 options.SubstituteApiVersionInUrl = true;
             });
-
-            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
             services.AddSwaggerGen(c =>
             {
@@ -125,6 +95,8 @@ namespace CatalogoAPI
             });
 
             services.AddScoped<ApiLoggingFilter>();
+
+            services.ResolveDependencies();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
