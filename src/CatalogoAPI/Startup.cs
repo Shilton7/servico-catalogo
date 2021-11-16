@@ -1,6 +1,6 @@
+using CatalogoAPI.Configuration;
 using CatalogoAPI.Configuration.Swagger;
 using CatalogoAPI.Context;
-using CatalogoAPI.Extensions;
 using CatalogoAPI.Filters;
 using CatalogoAPI.Logging;
 using CatalogoAPI.Repository;
@@ -41,7 +41,6 @@ namespace CatalogoAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
 
             string mySqlConnectionStr = _configuration.GetConnectionString("DefaultConnection");
 
@@ -72,6 +71,8 @@ namespace CatalogoAPI
                  });
 
             services.AddAutoMapper(typeof(Startup));
+
+            services.AddApiConfig();
 
             services.AddApiVersioning(options =>
             {
@@ -123,13 +124,6 @@ namespace CatalogoAPI
                 });
             });
 
-            services.AddControllers()
-                    .AddNewtonsoftJson(options =>
-                     {
-                         options.SerializerSettings.ReferenceLoopHandling
-                          = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                     });
-
             services.AddScoped<ApiLoggingFilter>();
         }
 
@@ -157,23 +151,8 @@ namespace CatalogoAPI
                 LogLevel = LogLevel.Information
             }, _configuration));
 
-            app.ConfigureExceptionHandler();
+            app.UseApiConfig(env);
 
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.UseCors(opt => opt.AllowAnyMethod()
-                                          .AllowAnyOrigin()
-                                          .AllowAnyHeader());
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
         }
     }
 }
