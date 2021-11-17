@@ -185,7 +185,7 @@ namespace CatalogoAPI.Controllers.V2
 
                 return Ok($"Categoria com id ({id}) foi atualizada com sucesso!");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     "Ocorreu um erro ao atualizar esta categoria.");

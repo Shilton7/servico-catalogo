@@ -115,7 +115,7 @@ namespace CatalogoAPI.Controllers.V2
 
                 return Ok();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     "Ocorreu um erro ao tentar atualizar este produto.");
