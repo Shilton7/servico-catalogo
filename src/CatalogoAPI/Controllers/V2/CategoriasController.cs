@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CatalogoAPI.Controllers.V2
 {
@@ -37,8 +38,9 @@ namespace CatalogoAPI.Controllers.V2
         {
             try
             {
-                var categorias = _uof.CategoriaRepository.Get();
-                return Ok(categorias);
+                var categorias = _uof.CategoriaRepository.Get().ToList();
+                var categoriasDTO = _mapper.Map<List<CategoriaDTO>>(categorias);
+                return categoriasDTO;
             }
             catch (Exception)
             {
@@ -70,9 +72,9 @@ namespace CatalogoAPI.Controllers.V2
 
                 Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
 
-                var categoriaDTO = _mapper.Map<IEnumerable<CategoriaDTO>> (categoria);
+                var categoriasDTO = _mapper.Map<IEnumerable<CategoriaDTO>>(categoria);
 
-                return Ok(categoriaDTO);
+                return Ok(categoriasDTO);
             }
             catch (Exception)
             {
