@@ -11,10 +11,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using System.Linq;
 
 namespace CatalogoAPI
 {
@@ -40,7 +37,7 @@ namespace CatalogoAPI
 
             services.AddAutoMapper(typeof(Startup));
 
-            services.AddApiConfig();
+            services.AddApiConfig(_configuration);
 
             services.AddSwaggerConfig();
 
@@ -52,14 +49,16 @@ namespace CatalogoAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IApiVersionDescriptionProvider provider)
         {
+            app.UseApiConfig(env, _configuration);
+
+            app.UseSwaggerConfig(provider);
+
+            /*
             loggerFactory.AddProvider(new CustomLoggerProvider(new CustomLoggerProviderConfig
             {
                 LogLevel = LogLevel.Information
             }, _configuration));
-
-            app.UseApiConfig(env);
-
-            app.UseSwaggerConfig(provider);
+            */
 
         }
     }

@@ -1,0 +1,26 @@
+{
+	"info": {
+		"_postman_id": "3e9ebda4-af83-44c2-9ab6-b56431b98abb",
+		"name": "5- Health Checks",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Datas",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/health-data",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"health-data"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
