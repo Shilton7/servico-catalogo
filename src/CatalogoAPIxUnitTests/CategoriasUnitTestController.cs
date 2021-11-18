@@ -5,7 +5,10 @@ using CatalogoAPI.Controllers.V2;
 using CatalogoAPI.DTOs;
 using CatalogoAPI.Repository;
 using CatalogoAPI.Repository.Interfaces;
+using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -38,8 +41,8 @@ namespace CatalogoAPIxUnitTests
             var context = new AppDbContext(dbContextOptions);
 
             /* Caso fosse utilizar outro banco de dados mocado */
-                //DBUnitTestsMockInitializer db = new DBUnitTestsMockInitializer();
-                //db.Seed(context);
+            //DBUnitTestsMockInitializer db = new DBUnitTestsMockInitializer();
+            //db.Seed(context);
 
             repository = new UnitOfWork(context);
         }
@@ -56,7 +59,87 @@ namespace CatalogoAPIxUnitTests
             //Assert 
             Assert.IsType<List<CategoriaDTO>>(data.Value);
         }
-            
+
+        [Fact]
+        public void GetCategorias_Return_BadRequestResult()
+        {
+            //Arrange
+            var controller = new CategoriasController(repository, mapper);
+
+            //Act
+            var data = controller.Get();
+
+            //Assert 
+            Assert.IsType<BadRequestResult>(data.Result);
+        }
+
+        [Fact]
+        public void GetCategorias_MatchResult()
+        {
+            //Arrange
+            var controller = new CategoriasController(repository, mapper);
+
+            //Act
+            var data = controller.Get();
+
+            //Assert 
+            Assert.IsType<List<CategoriaDTO>>(data.Value);
+            var categorias = data.Value.Should().BeAssignableTo<List<CategoriaDTO>>().Subject;
+
+            Assert.Equal(1, categorias[0].CategoriaId);
+            Assert.Equal("Celulares", categorias[0].Nome);
+
+            Assert.Equal(4, categorias[3].CategoriaId);
+            Assert.Equal("Saldão", categorias[3].Nome);
+        }
+
+        [Fact]
+        public void GetCategoriaPorId_Return_OkObjectResult()
+        {
+            //Arrange
+            var controller = new CategoriasController(repository, mapper);
+
+            //Act
+            int CategoriaId = 1;
+            var data = controller.GetById(CategoriaId);
+            Console.WriteLine(data);
+
+            //Assert 
+            Assert.IsType<OkObjectResult>(data.Result);
+        }
+
+        [Fact]
+        public void GetCategoriaById_Return_NotFoundObjectResult()
+        {
+            //Arrange  
+            var controller = new CategoriasController(repository, mapper);
+            var CategoriaId = 9999;
+
+            //Act  
+            var data = controller.GetById(CategoriaId);
+
+            //Assert  
+            Assert.IsType<NotFoundObjectResult>(data.Result);
+        }
+
+        [Fact]
+        public void PostCategoria_Return_CreatedAtRouteResult()
+        {
+            //Arrange  
+            var controller = new CategoriasController(repository, mapper);
+            var categoriaRequest = new CategoriaDTO
+            {
+                Nome = "Brinquedos",
+                ImagemUrl = "brinquedos.png"
+            };
+
+            //Act  
+            var data = controller.Post(categoriaRequest);
+
+            //Assert  
+            Assert.IsType<CreatedAtRouteResult>(data);
+        }
+
     }
 
 }

@@ -40,12 +40,12 @@ namespace CatalogoAPI.Controllers.V2
             {
                 var categorias = _uof.CategoriaRepository.Get().ToList();
                 var categoriasDTO = _mapper.Map<List<CategoriaDTO>>(categorias);
+                //throw new Exception();
                 return categoriasDTO;
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Erro ao listar as categorias");
+                return BadRequest();
             }
 
         }
